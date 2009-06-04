@@ -92,6 +92,24 @@ sub on_msg {
       main::sendmsg($network, ($channel eq "/msg" ? $from : $channel), ($channel eq "/msg" ? "" : "$from: ") . "could not translate to pirate");
       print $response->content;
     }
+  } elsif($cmd =~ /^\s*${regexextra}woot\b/) {
+    my $word = $1;
+    my $ua = LWP::UserAgent->new(agent => "Mozilla/5.0");
+    $ua->timeout(3);
+#    $ua->default_header('Referrer' => "http://www.talklikeapirateday.com/translate/index.php");
+    my $response = $ua->get("http://www.woot.com");
+    if($response->is_success) {
+      my $html = $response->content;
+      $html =~ /<h2>(.+?)<\/h2>.+?<h3>(.+?)<\/h3>/s;
+      if(defined $1 && defined $2) {
+        main::sendmsg($network, ($channel eq "/msg" ? $from : $channel), ($channel eq "/msg" ? "" : "$from: ") . $1 . " - " . $2);
+      } else {
+        main::sendmsg($network, ($channel eq "/msg" ? $from : $channel), ($channel eq "/msg" ? "" : "$from: ") . "could not retrieve current woot");
+      }
+    } else {
+      main::sendmsg($network, ($channel eq "/msg" ? $from : $channel), ($channel eq "/msg" ? "" : "$from: ") . "could not retrieve current woot");
+#      print $response->content;
+    }
   }
 }
 
