@@ -94,9 +94,8 @@ sub on_msg {
     }
   } elsif($cmd =~ /^\s*${regexextra}woot\b/) {
     my $word = $1;
-    my $ua = LWP::UserAgent->new(agent => "Mozilla/5.0");
-    $ua->timeout(3);
-#    $ua->default_header('Referrer' => "http://www.talklikeapirateday.com/translate/index.php");
+    my $ua = LWP::UserAgent->new();
+    $ua->timeout(5);
     my $response = $ua->get("http://www.woot.com");
     if($response->is_success) {
       my $html = $response->content;
