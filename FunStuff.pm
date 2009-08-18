@@ -110,12 +110,12 @@ sub on_msg {
         my $html = $response->content;
         $html =~ /<h2>(.+?)<\/h2>.+?<h3>(.+?)<\/h3>/s;
         if(defined $1 && defined $2) {
-          $msg .= ($msg ? ", " : "") . $woot->[0] . ": " . $1 . " - " . $2;
+          $msg .= ($msg ? " | " : "") . $woot->[0] . ": " . $1 . " - " . $2;
         } else {
-          $msg .= ($msg ? ", " : "") . $woot->[0] . ": could not retrieve";
+          $msg .= ($msg ? " | " : "") . $woot->[0] . ": could not retrieve";
         }
       } else {
-        $msg .= ($msg ? ", " : "") . $woot->[0] . ": could not retrieve";
+        $msg .= ($msg ? " | " : "") . $woot->[0] . ": could not retrieve";
       }
     }
     main::sendmsg($network, ($channel eq "/msg" ? $from : $channel), ($channel eq "/msg" ? "" : "$from: ") . $msg);
