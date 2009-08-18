@@ -3,6 +3,8 @@ package FunStuff;
 use strict;
 use warnings;
 
+use HTTP::Cookies;
+
 sub on_msg {
   my $from = shift;
   my $network = shift;
@@ -93,22 +95,30 @@ sub on_msg {
       print $response->content;
     }
   } elsif($cmd =~ /^\s*${regexextra}woot\b/) {
-    my $word = $1;
     my $ua = LWP::UserAgent->new();
     $ua->timeout(5);
-    my $response = $ua->get("http://www.woot.com");
-    if($response->is_success) {
-      my $html = $response->content;
-      $html =~ /<h2>(.+?)<\/h2>.+?<h3>(.+?)<\/h3>/s;
-      if(defined $1 && defined $2) {
-        main::sendmsg($network, ($channel eq "/msg" ? $from : $channel), ($channel eq "/msg" ? "" : "$from: ") . $1 . " - " . $2);
+    my @woots = (
+      ["Main", "http://www.woot.com/"],
+      ["Shirt", "http://shirt.woot.com/"],
+      ["Kids", "http://kids.woot.com/"],
+      ["Wine", "http://wine.woot.com/"],
+    );
+    my $msg = "";
+    for my $woot (@woots) {
+      my $response = $ua->get($woot->[1]);
+      if($response->is_success) {
+        my $html = $response->content;
+        $html =~ /<h2>(.+?)<\/h2>.+?<h3>(.+?)<\/h3>/s;
+        if(defined $1 && defined $2) {
+          $msg .= ($msg ? ", " : "") . $woot->[0] . ": " . $1 . " - " . $2;
+        } else {
+          $msg .= ($msg ? ", " : "") . $woot->[0] . ": could not retrieve";
+        }
       } else {
-        main::sendmsg($network, ($channel eq "/msg" ? $from : $channel), ($channel eq "/msg" ? "" : "$from: ") . "could not retrieve current woot");
+        $msg .= ($msg ? ", " : "") . $woot->[0] . ": could not retrieve";
       }
-    } else {
-      main::sendmsg($network, ($channel eq "/msg" ? $from : $channel), ($channel eq "/msg" ? "" : "$from: ") . "could not retrieve current woot");
-#      print $response->content;
     }
+    main::sendmsg($network, ($channel eq "/msg" ? $from : $channel), ($channel eq "/msg" ? "" : "$from: ") . $msg);
   }
 }
 
