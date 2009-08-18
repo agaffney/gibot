@@ -3,8 +3,6 @@ package FunStuff;
 use strict;
 use warnings;
 
-use HTTP::Cookies;
-
 sub on_msg {
   my $from = shift;
   my $network = shift;
