@@ -116,6 +116,20 @@ sub on_msg {
         $msg .= ($msg ? " | " : "") . $woot->[0] . ": could not retrieve";
       }
     }
+
+    my $response = $ua->get("http://deals.yahoo.com/?name=woot#woot");
+    if($response->is_success) {
+      my $html = $response->content;
+      $html =~ /<h3><a [^>]+>(.+?)<\/a><\/h3><strong class="price"><a [^>]+>(.+?)<\/a><\/strong>/s;
+      if(defined $1 && defined $2) {
+        $msg .= ($msg ? " | " : "") . "Sellout: " . $1 . " - " . $2;
+      } else {
+        $msg .= ($msg ? " | " : "") . "Sellout: could not retrieve";
+      }
+    } else {
+      $msg .= ($msg ? " | " : "") . "Sellout: could not retrieve";
+    }
+
     main::sendmsg($network, ($channel eq "/msg" ? $from : $channel), ($channel eq "/msg" ? "" : "$from: ") . $msg);
   }
 }
