@@ -106,9 +106,9 @@ sub on_msg {
       my $response = $ua->get($woot->[1]);
       if($response->is_success) {
         my $html = $response->content;
-        $html =~ /<h2>(.+?)<\/h2>.+?<h3>(.+?)<\/h3>/s;
+        $html =~ /<h2 class="fn">(.+?)<\/h2>.+?<h3 class="price">.+?<span class="amount">(.+?)<\/span>.+?<\/h3>/s;
         if(defined $1 && defined $2) {
-          $msg .= ($msg ? " | " : "") . $woot->[0] . ": " . $1 . " - " . $2;
+          $msg .= ($msg ? " | " : "") . $woot->[0] . ": " . $1 . " - \$" . $2;
         } else {
           $msg .= ($msg ? " | " : "") . $woot->[0] . ": could not retrieve";
         }
