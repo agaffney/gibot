@@ -3,6 +3,7 @@ package Language;
 use warnings;
 
 require LWP::UserAgent;
+require URL::Escape;
 
 sub on_msg {
   my $from = shift;
@@ -34,7 +35,7 @@ sub on_msg {
     my $query = $1;
     my $ua = LWP::UserAgent->new(agent => "Mozilla/5.0");
     $ua->timeout(3);
-    my $response = $ua->post("http://translate.google.com/translate_t", { text => $3, langpair => "$1|$2", sl => $1, tl => $2, hl => "en", ie => "UTF8" });
+    my $response = $ua->get("http://translate.google.com/#${1}|${2}|" . uri_escape($3));
     if($response->is_success) {
       my $html = $response->content;
 #      print $html;
