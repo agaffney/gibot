@@ -30,16 +30,17 @@ sub on_msg {
     $regexextra = "!";
   }
   if($cmd =~ /^\s*${regexextra}translate (\w+)(?:\s+|->|\|)(\w+) (.+)$/) {
-    my $tolang = $1;
-    my $fromlang = $2;
-    my $query = $1;
+    my $fromlang = $1;
+    my $tolang = $2;
+    my $query = $3;
     my $ua = LWP::UserAgent->new(agent => "Mozilla/5.0");
     $ua->timeout(3);
-    my $response = $ua->get("http://translate.google.com/#${1}|${2}|" . uri_escape_utf8($3));
+    my $response = $ua->get("http://translate.google.com/#${fromlang}|${tolang}|" . uri_escape_utf8($query));
     if($response->is_success) {
       my $html = $response->content;
 #      print $html;
-      $html =~ /<div id=result_box[^>]*>([^>]+)</s;
+      undef $1;
+      $html =~ /<span id="result_box"[^>]*>([^>]+)</s;
       main::sendmsg($network, ($channel eq "/msg" ? $from : $channel), ($channel eq "/msg" ? "" : "$from: ") . $1);
     } else {
       main::sendmsg($network, ($channel eq "/msg" ? $from : $channel), ($channel eq "/msg" ? "" : "$from: ") . "could not translate");
