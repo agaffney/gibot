@@ -3,7 +3,7 @@ package Language;
 use warnings;
 
 require LWP::UserAgent;
-require URL::Escape;
+require URI::Escape;
 
 sub on_msg {
   my $from = shift;
