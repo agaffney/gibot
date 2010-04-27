@@ -3,7 +3,7 @@ package Language;
 use warnings;
 
 require LWP::UserAgent;
-require URI::Escape;
+use URI::Escape (uri_escape_utf8);
 
 sub on_msg {
   my $from = shift;
@@ -35,7 +35,7 @@ sub on_msg {
     my $query = $1;
     my $ua = LWP::UserAgent->new(agent => "Mozilla/5.0");
     $ua->timeout(3);
-    my $response = $ua->get("http://translate.google.com/#${1}|${2}|" . uri_escape($3));
+    my $response = $ua->get("http://translate.google.com/#${1}|${2}|" . uri_escape_utf8($3));
     if($response->is_success) {
       my $html = $response->content;
 #      print $html;
