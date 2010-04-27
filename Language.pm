@@ -39,7 +39,6 @@ sub on_msg {
     if($response->is_success) {
       my $html = $response->content;
 #      print $html;
-      undef $1;
       $html =~ /<span id="result_box"[^>]*>([^>]+)</s;
       main::sendmsg($network, ($channel eq "/msg" ? $from : $channel), ($channel eq "/msg" ? "" : "$from: ") . $1);
     } else {
