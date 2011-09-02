@@ -117,7 +117,7 @@ sub on_msg {
       }
     }
 
-    my $response = $ua->get("http://deals.yahoo.com/?name=woot#woot");
+    my $response = $ua->get("http://sellout.woot.com/");
     if($response->is_success) {
       my $html = $response->content;
       $html =~ /<h3><a [^>]+>(.+?)<\/a><\/h3><strong class="price"><a [^>]+>(.+?)<\/a><\/strong>/s;
