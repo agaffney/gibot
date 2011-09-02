@@ -100,6 +100,7 @@ sub on_msg {
       ["Shirt", "http://shirt.woot.com/"],
       ["Kids", "http://kids.woot.com/"],
       ["Wine", "http://wine.woot.com/"],
+      ["Sellout", "http://sellout.woot.com/"],
     );
     my $msg = "";
     for my $woot (@woots) {
@@ -117,18 +118,18 @@ sub on_msg {
       }
     }
 
-    my $response = $ua->get("http://sellout.woot.com/");
-    if($response->is_success) {
-      my $html = $response->content;
-      $html =~ /<h3><a [^>]+>(.+?)<\/a><\/h3><strong class="price"><a [^>]+>(.+?)<\/a><\/strong>/s;
-      if(defined $1 && defined $2) {
-        $msg .= ($msg ? " | " : "") . "Sellout: " . $1 . " - " . $2;
-      } else {
-        $msg .= ($msg ? " | " : "") . "Sellout: could not retrieve";
-      }
-    } else {
-      $msg .= ($msg ? " | " : "") . "Sellout: could not retrieve";
-    }
+#    my $response = $ua->get("http://sellout.woot.com/");
+#    if($response->is_success) {
+#      my $html = $response->content;
+#      $html =~ /<h3><a [^>]+>(.+?)<\/a><\/h3><strong class="price"><a [^>]+>(.+?)<\/a><\/strong>/s;
+#      if(defined $1 && defined $2) {
+#        $msg .= ($msg ? " | " : "") . "Sellout: " . $1 . " - " . $2;
+#      } else {
+#        $msg .= ($msg ? " | " : "") . "Sellout: could not retrieve";
+#      }
+#    } else {
+#      $msg .= ($msg ? " | " : "") . "Sellout: could not retrieve";
+#    }
 
     main::sendmsg($network, ($channel eq "/msg" ? $from : $channel), ($channel eq "/msg" ? "" : "$from: ") . $msg);
   }
