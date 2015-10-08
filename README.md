@@ -10,4 +10,4 @@ $ docker build -t gibot .
 
 You can then run it with the following command:
 
-$ docker run -d --name gibot -v /path/to/gibot.db:/gibot/gibot.db gibot /gibot/gibot.pl
+$ docker run -d --name gibot --restart=always -v /path/to/gibot.db:/gibot/gibot.db gibot
