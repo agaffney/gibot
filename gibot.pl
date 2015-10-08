@@ -245,7 +245,10 @@ sub load_module {
 
   return 0 if($modules->{$newmodule});
   eval "use $newmodule;";
-  return 0 if($@);
+  if($@) {
+    logmsg("load of module ${newmodule} failed: $@");
+    return 0;
+  }
   my $fname = $newmodule;
   $fname =~ s|::|/|g;
   $fname .= ".pm";
@@ -308,9 +311,10 @@ sub call_handlers {
 
 sub logmsg {
   my $msg = shift;
+  my $timestr = localtime();
 
-#  print "$msg\n";
-  print LOGFILE localtime() . " ${msg}\n";
+  print "${timestr} $msg\n";
+  print LOGFILE "${timestr} ${msg}\n";
 }
 
 # We registered for all events, this will produce some debug info.
@@ -472,11 +476,11 @@ while(my $row = $sth->fetchrow_hashref) {
 $sth = db_query("SELECT * FROM modules ORDER BY moduleid");
 while(my $row = $sth->fetchrow_hashref) {
   my $module = $row->{'name'};
-  print "Loading module $module...";
+  my $loadmsg = "Loading module $module...";
   if(load_module($module)) {
-    print "done\n";
+    logmsg "loaded module ${module}";
   } else {
-    print "ERROR!\n";
+    logmsg "loading module ${module} FAILED";
   }
 }
 
