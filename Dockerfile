@@ -4,6 +4,7 @@ RUN echo "Building..." && \
 	yum install -y epel-release tar gzip && \
 	yum install -y perl-DBD-SQLite2 perl-POE-Component-IRC perl-POE-Component-Syndicator perl-CPAN && \
 	echo | cpan -i Weather::Underground Module::Reload && \
+	rm -rf /root/.cpan /tmp/* && \
 	yum clean all
 
 COPY . /gibot/
